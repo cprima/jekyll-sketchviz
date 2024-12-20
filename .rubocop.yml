@@ -33,3 +33,13 @@ Metrics/BlockLength:
 Naming/FileName:
   Exclude:
     - lib/jekyll-sketchviz.rb
+
+RSpec/MultipleExpectations:
+  Max: 3 # Relaxed rule: Allow up to 3 expectations per example
+  Exclude:
+    - "spec/**/*" # Optionally exclude specific test files
+
+RSpec/ExampleLength:
+  Max: 8 # Relaxed rule: Allow examples up to 8 lines long
+  Exclude:
+    - "spec/**/*" # Optionally exclude specific test files

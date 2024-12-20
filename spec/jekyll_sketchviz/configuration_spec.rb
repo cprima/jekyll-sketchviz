@@ -5,8 +5,14 @@ require 'jekyll_sketchviz/configuration'
 RSpec.describe JekyllSketchviz::Configuration do
   let(:default_config) { JekyllSketchviz::Configuration::DEFAULTS }
 
-  # Mock the Jekyll site object
-  let(:site) { instance_double(Jekyll::Site, config: site_config) }
+  let(:site) do
+    instance_double(
+      Jekyll::Site,
+      config: site_config,
+      source: '/mock/site/source' # Mock the `source` method
+    )
+  end
+
   let(:site_config) { { 'sketchviz' => user_config } }
   let(:user_config) { nil }
 
@@ -24,23 +30,19 @@ RSpec.describe JekyllSketchviz::Configuration do
       let(:user_config) { { 'roughness' => 2.0 } }
 
       it 'overrides the default roughness value' do
+        result = described_class.from_site(site)
         expect(result[:roughness]).to eq(2.0)
       end
 
       it 'preserves the default bowing value' do
+        result = described_class.from_site(site)
         expect(result[:bowing]).to eq(default_config[:bowing])
       end
     end
 
     context 'when a nested override is provided' do
       let(:user_config) do
-        {
-          'output' => {
-            'inline' => {
-              'styled' => false
-            }
-          }
-        }
+        { 'output' => { 'inline' => { 'styled' => false } } }
       end
 
       it 'overrides the nested styled value' do
@@ -68,11 +70,7 @@ RSpec.describe JekyllSketchviz::Configuration do
         {
           'input_collection' => 'custom_graphs',
           'roughness' => 2.5,
-          'output' => {
-            'filesystem' => {
-              'styled' => true
-            }
-          }
+          'output' => { 'filesystem' => { 'styled' => true } }
         }
       end
 

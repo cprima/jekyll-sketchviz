@@ -19,7 +19,8 @@ module JekyllSketchviz
           }
         },
         filesystem: {
-          styled: false
+          styled: false,
+          path: './assets/graphs' # Default path relative to Jekyll root
         }
       },
       roughness: 1.5,
@@ -37,9 +38,11 @@ module JekyllSketchviz
     def self.from_site(site)
       Jekyll.logger.info 'Jekyll Sketchviz:', "from_site called with site: #{site.source}"
       site_config = site.config['sketchviz'] || {}
-      config = deep_merge(DEFAULTS, site_config)
-      Jekyll.logger.info 'Jekyll Sketchviz:', "Loaded configuration: #{config.inspect}"
-      config
+      normalized_config = symbolize_keys(site_config)
+      merged_config = deep_merge(DEFAULTS, normalized_config)
+      validated_config = validate_config(merged_config)
+      Jekyll.logger.info 'Jekyll Sketchviz:', "Loaded configuration: #{validated_config.inspect}"
+      validated_config
     end
 
     # Recursively merges two hashes, preferring values from the second hash.
@@ -51,6 +54,64 @@ module JekyllSketchviz
       hash1.merge(hash2) do |_key, oldval, newval|
         oldval.is_a?(Hash) && newval.is_a?(Hash) ? deep_merge(oldval, newval) : newval
       end
+    end
+
+    # Normalizes hash keys to symbols recursively
+    #
+    # @param hash [Hash] The hash with keys to be symbolized.
+    # @return [Hash] The resulting hash with symbolized keys.
+    def self.symbolize_keys(hash)
+      hash.each_with_object({}) do |(key, value), result|
+        result[key.to_sym] = value.is_a?(Hash) ? symbolize_keys(value) : value
+      end
+    end
+
+    # Validate and sanitize the configuration
+    #
+    # @param config [Hash] The merged configuration hash.
+    # @return [Hash] The validated and sanitized configuration hash.
+    def self.validate_config(config)
+      validate_numerics(config)
+      validate_booleans(config)
+      ensure_filesystem_path(config)
+      config
+    end
+
+    private_class_method def self.validate_numerics(config)
+      config[:roughness] = DEFAULTS[:roughness] unless config[:roughness].is_a?(Numeric)
+      config[:bowing] = DEFAULTS[:bowing] unless config[:bowing].is_a?(Numeric)
+    end
+
+    private_class_method def self.validate_booleans(config)
+      validate_inline_styled(config)
+      validate_filesystem_styled(config)
+    end
+
+    private_class_method def self.validate_inline_styled(config)
+      config[:output][:inline][:styled] = fetch_boolean_or_default(
+        config[:output][:inline],
+        :styled,
+        DEFAULTS[:output][:inline][:styled]
+      )
+    end
+
+    private_class_method def self.validate_filesystem_styled(config)
+      config[:output][:filesystem][:styled] = fetch_boolean_or_default(
+        config[:output][:filesystem],
+        :styled,
+        DEFAULTS[:output][:filesystem][:styled]
+      )
+    end
+
+    private_class_method def self.fetch_boolean_or_default(hash, key, default)
+      return default unless hash.key?(key)
+
+      hash[key] ? true : false
+    end
+
+
+    private_class_method def self.ensure_filesystem_path(config)
+      config[:output][:filesystem][:path] ||= "./assets/#{config[:input_collection]}"
     end
   end
 end
