@@ -1,71 +1,35 @@
 require:
-  # - rubocop-jekyll
-  - rubocop-md
-  - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
 
+# Ensures the Exclude list is merged instead of overwritten when defining separate configurations.
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
-  Exclude:
-    - binstub/**/*
-    - exe/**/*
-    - vendor/**/*
-    - Gemfile*
+  TargetRubyVersion: 3.3
   NewCops: enable
-  TargetRubyVersion: 3.1.3
-
-Gemspec/DeprecatedAttributeAssignment:
-  Enabled: false
-
-Gemspec/RequireMFA:
-  Enabled: false
-
-Layout/HashAlignment:
-  EnforcedColonStyle: table
-  EnforcedHashRocketStyle: table
+  Exclude:
+    - "demo/**/*"
+    - "spec/mock_files/**/*"
+    - "Gemfile"
+    - "Rakefile"
 
 Layout/LineLength:
-  Max: 150
-
-Metrics/AbcSize:
-  Max: 35
+  Max: 120
 
 Metrics/BlockLength:
+  Max: 50 # Default block length for most files
   Exclude:
-    - jekyll-sketchviz.gemspec
-  Max: 30
+    - "Rakefile"
 
-Metrics/CyclomaticComplexity:
-  Max: 15
-
-Metrics/MethodLength:
-  Max: 40
-
-Metrics/ModuleLength:
-  Enabled: false
-
-Metrics/PerceivedComplexity:
-  Max: 15
+# Custom settings for .gemspec files
+Metrics/BlockLength:
+  Max: 100 # Higher block length limit for .gemspec
+  Include:
+    - "*.gemspec"
 
 Naming/FileName:
   Exclude:
-    - Rakefile
-
-Style/Documentation:
-  Enabled: false
-
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: comma
-
-RSpec/FilePath:
-  IgnoreMethods: true
-  SpecSuffixOnly: true
-
-RSpec/ExampleLength:
-  Max: 30
-
-RSpec/MultipleExpectations:
-  Max: 15
+    - lib/jekyll-sketchviz.rb

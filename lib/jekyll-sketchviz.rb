@@ -1,12 +1,16 @@
-require 'jekyll'
-require 'jekyll_plugin_logger'
-require 'jekyll_plugin_support'
+# frozen_string_literal: true
 
-require_relative 'jekyll-sketchviz/version'
+require 'jekyll' # Ensure Jekyll core is loaded
+require_relative 'jekyll_sketchviz/version'
+require_relative 'jekyll_sketchviz/configuration'
+require_relative 'jekyll_sketchviz/generator'
+require_relative 'jekyll_sketchviz/liquid_tag'
 
-# Require all Ruby files in 'lib/', except this file
-Dir[File.join(__dir__, '*.rb')].each do |file|
-  require file unless file.end_with?('/jekyll-sketchviz.rb')
+# Define the main module for the plugin
+module JekyllSketchviz
+  # This ensures the plugin is registered and functional when included in a Jekyll site
+  Jekyll::Hooks.register :site, :post_write do |site|
+    config = Configuration.from_site(site)
+    Jekyll.logger.info 'Jekyll Sketchviz:', "Loaded configuration: #{config.inspect}"
+  end
 end
-
-# Write the code for your gem here

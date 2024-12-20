@@ -1,81 +1,159 @@
-# `Jekyll-sketchviz` [![Gem Version](https://badge.fury.io/rb/jekyll-sketchviz.svg)](https://badge.fury.io/rb/jekyll-sketchviz)
+# Jekyll SketchViz Plugin
 
-Description of JekyllSketchviz
+`jekyll-sketchviz` is a Jekyll plugin that transforms Graphviz `.dot` files into beautifully "roughened" SVG diagrams using [Rough.js](https://roughjs.com/). The plugin supports two output formats: inline SVGs for web pages and unstyled SVG files for filesystem output, enabling seamless integration into your Jekyll site.
 
+---
+
+## Features
+
+- **Graphviz `.dot` File Support**:
+  - Converts `.dot` files into SVG using the `dot` executable.
+- **Rough.js Integration**:
+  - Adds sketch-style effects to `rect`, `circle`, `ellipse`, `line`, `polygon`, `polyline`, and `path` elements.
+- **Output Formats**:
+  - **Inline SVGs**: Styled via CSS for webpage inclusion.
+  - **Filesystem SVGs**: Unstyled, inheriting Graphviz defaults, ideal for printed or static usage.
+- **Customizable Settings**:
+  - Configure Rough.js parameters (`roughness`, `bowing`), output directories, and CSS class mappings.
+- **Flexible Liquid Tag API**:
+  - Include diagrams inline or as files with per-use overrides.
+- **Theme-Agnostic Styling**:
+  - Inline SVGs styled using global or diagram-specific CSS.
+
+---
 
 ## Installation
 
-Add the following to your Jekyll website's `Gemfile`:
+1. Add the plugin to your Gemfile:
+   ```ruby
+   gem "jekyll-sketchviz"
+   ```
 
-```ruby
-group :jekyll_plugins do
-  gem 'jekyll-sketchviz'
-end
-```
+2. Run `bundle install`.
 
-And then execute:
+3. Add the plugin to your `_config.yml`:
+   ```yaml
+   plugins:
+     - jekyll-sketchviz
+   ```
 
-```shell
-$ bundle
-```
+4. Configure the plugin (optional):
+   ```yaml
+   sketchviz:
+     input_collection: graphs
+     output:
+       filesystem:
+         directory: assets/graphs
+         styled: false
+       inline:
+         styled: true
+         css_classes:
+           svg: sketchviz
+           background: sketchviz-bg
+           node: sketchviz-node
+           edge: sketchviz-edge
+     executable:
+       dot: dot
+     roughness: 1.5
+     bowing: 1.0
+   ```
 
+---
 
 ## Usage
 
-Describe how to use this gem
+### 1. **Add `.dot` Files**
+Place `.dot` files in your Jekyll collection (e.g., `_graphs/`).
 
+### 2. **Include Diagrams with Liquid Tag**
+Use the `{% sketchviz %}` tag in your Markdown or HTML:
 
-## Development
-
-After checking out this git repository, install dependencies by typing:
-
-```shell
-$ bin/setup
+**Basic Usage**:
+```liquid
+{% sketchviz "diagram.dot" %}
 ```
 
-You should do the above before running Visual Studio Code.
-
-
-### Run the Tests
-
-```shell
-$ bundle exec rake test
+**Advanced Usage**:
+```liquid
+{% sketchviz "subdir/diagram.dot", inline: true, roughness: 2.5, styled: true %}
 ```
 
+---
 
-### Interactive Session
+## Configuration
 
-The following will allow you to experiment:
+### Global Configuration
+Configure global defaults in `_config.yml`:
 
-```shell
-$ bin/console
+```yaml
+sketchviz:
+  input_collection: graphs
+  output:
+    filesystem:
+      directory: assets/graphs
+      styled: false
+    inline:
+      styled: true
+      css_classes:
+        svg: sketchviz
+        background: sketchviz-bg
+        node: sketchviz-node
+        edge: sketchviz-edge
+  executable:
+    dot: dot
+  roughness: 1.5
+  bowing: 1.0
 ```
 
-
-### Local Installation
-
-To install this gem onto your local machine, type:
-
-```shell
-$ bundle exec rake install
+### Per-File Configuration
+Override settings in `.dot` file front matter:
+```yaml
+---
+title: Custom Diagram
+sketchviz:
+  roughness: 2.0
+  bowing: 1.5
+  styled: true
+---
 ```
 
+---
 
-### To Release A New Version
+## Examples
 
-To create a git tag for the new version, push git commits and tags,
-and push the new version of the gem to https://rubygems.org, type:
-
-```shell
-$ bundle exec rake release
+### **Inline SVG**
+Rendered directly in your page:
+```html
+<svg class="sketchviz">
+  <!-- Rough.js transformations applied -->
+</svg>
 ```
 
+### **Filesystem SVG**
+Referenced in your content:
+```markdown
+![Diagram](assets/graphs/diagram.svg)
+```
+
+---
+
+## Requirements
+
+- **Graphviz**: `dot` executable must be available in your system's PATH or configured explicitly.
+- **Rough.js**: Included as part of the plugin.
+
+---
 
 ## Contributing
 
-Bug reports and pull requests are welcome at https://github.com/cprima/jekyll-sketchviz.
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature-name`.
+3. Commit your changes: `git commit -m 'Add feature'`.
+4. Push to the branch: `git push origin feature-name`.
+5. Open a pull request.
 
+---
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+This project is licensed under the CC-BY License. See the `LICENSE.md` file for details.

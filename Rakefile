@@ -1,40 +1,14 @@
-require 'bundler/gem_tasks'
-require 'rake/testtask'
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
 
-Rake::TestTask.new(:test) do |t|
-  t.libs << 'test'
-  t.libs << 'lib'
-  t.test_files = FileList['test/**/*_test.rb']
+# Task for running tests
+RSpec::Core::RakeTask.new(:spec)
+
+# Default task (runs tests)
+task default: :spec
+
+# Task for linting with RuboCop
+desc "Run RuboCop lint checks"
+task :rubocop do
+  sh "bundle exec rubocop"
 end
-
-desc 'Bump patch version'
-task :patch do
-  system 'gem bump --tag'
-end
-
-desc 'Bump minor version'
-task :minor do
-  system 'gem bump --version minor --tag'
-end
-
-desc 'Bump major version'
-task :major do
-  system 'gem bump --version major --tag'
-end
-
-task publish: [:build] do
-  $VERBOSE = nil
-  load 'jekyll-sketchviz/version.rb'
-  system "gem push pkg/jekyll-sketchviz-#{JekyllSketchviz::VERSION}.gem"
-end
-
-desc 'Bump patch version, create git tag, build the gem and release to geminabox (default)'
-task release_patch: %i[test patch publish]
-
-desc 'Bump minor version, create git tag, build the gem and release to geminabox'
-task release_minor: %i[test minor publish]
-
-desc 'Bump major version, create git tag, build the gem and release to geminabox'
-task release_major: %i[test major publish]
-
-task default: :test

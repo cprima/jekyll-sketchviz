@@ -1,0 +1,18 @@
+digraph Interdependencies {
+  graph [bgcolor="#ffffff", fontcolor="#333333"];
+  node [shape="box", style="rounded,filled", fillcolor="#eeeeee", fontcolor="#333333"];
+  edge [color="#999999"];
+
+  A [label="Project A"];
+  B [label="Project B"];
+  C [label="Project C"];
+  D [label="Project D"];
+  E [label="Project E"];
+
+  A -> B [label="Task 1"];
+  A -> C [label="Task 2"];
+  B -> D [label="Task 3"];
+  C -> D [label="Task 4"];
+  C -> E [label="Task 5"];
+  D -> E [label="Task 6"];
+}
