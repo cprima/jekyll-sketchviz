@@ -32,9 +32,11 @@ module JekyllSketchviz
     # @param output_base_dir [String] The base directory for the generated `.svg` file.
     # @param input_base_dir [String] The base directory for input `.dot` files.
     # @return [String] The path to the generated `.svg` file.
-    def build_output_path(dot_file_path, output_base_dir, input_base_dir)
+    def build_output_path(dot_file_path, input_base_dir, output_base_dir)
       relative_path = Pathname.new(dot_file_path).relative_path_from(Pathname.new(input_base_dir)).to_s
       File.join(output_base_dir, relative_path.sub(/\.dot$/, '.svg'))
+    rescue ArgumentError
+      raise "Path normalization error: #{dot_file_path} is not within #{input_base_dir}"
     end
 
     # Ensures the output directory for the `.svg` file exists.

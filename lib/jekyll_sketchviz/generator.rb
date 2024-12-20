@@ -15,7 +15,7 @@ module JekyllSketchviz
       # Fetch configuration
       config = JekyllSketchviz::Configuration.from_site(site)
 
-      Jekyll::Hooks.register :site, :post_write do |_site|
+      Jekyll::Hooks.register :site, :post_write do |_post_write_site|
         process_collection_files(site, config)
       end
     end
