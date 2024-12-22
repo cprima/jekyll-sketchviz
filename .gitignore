@@ -1,18 +1,19 @@
-# Ignore demo site for end-to-end testing
-/demo/
-
-# Ignore build artifacts
+# Ruby-specific
 *.gem
-.pkg/
+.bundle/
+Gemfile.lock
 
-# Ignore logs and temporary files
+# Logs and temp files
 log/
 tmp/
 
-# Ignore editor/IDE files
-.vscode/
-.idea/
-*.swp
+# RSpec temp files
+.rspec_status
 
-# Ignore dependency lockfiles
-Gemfile.lock
+# RuboCop
+.rubocop_cache/
+
+# Jekyll demo site
+demo/
+demo/_site/
+demo/.jekyll-cache/
