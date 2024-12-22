@@ -65,7 +65,8 @@ RSpec.describe JekyllSketchviz::Generator do
         expect(mock_processor).to have_received(:process).with(
           doc.path,
           '/mock/site/_site/assets/graphs',
-          '/mock/site/source/_graphs'
+          '/mock/site/source/_graphs',
+          'dot'
         )
       end
     end

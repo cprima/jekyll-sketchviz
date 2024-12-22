@@ -36,13 +36,11 @@ module JekyllSketchviz
     # @param site [Jekyll::Site] The Jekyll site object containing the configuration.
     # @return [Hash] The merged configuration hash.
     def self.from_site(site)
-      Jekyll.logger.info 'Jekyll Sketchviz:', "from_site called with site: #{site.source}"
       site_config = site.config['sketchviz'] || {}
       normalized_config = symbolize_keys(site_config)
       merged_config = deep_merge(DEFAULTS, normalized_config)
-      validated_config = validate_config(merged_config)
-      Jekyll.logger.info 'Jekyll Sketchviz:', "Loaded configuration: #{validated_config.inspect}"
-      validated_config
+      validate_config(merged_config)
+      # Jekyll.logger.info 'Jekyll Sketchviz:', "Loaded configuration: #{validated_config.inspect}"
     end
 
     # Recursively merges two hashes, preferring values from the second hash.

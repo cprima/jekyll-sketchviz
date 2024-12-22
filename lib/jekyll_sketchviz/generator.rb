@@ -34,23 +34,33 @@ module JekyllSketchviz
     end
 
     def build_output_base_dir(site, config)
-      File.join(site.dest, config[:output][:filesystem][:path])
+      output_path = Pathname.new(config[:output][:filesystem][:path]).cleanpath.to_s
+      File.join(site.dest, output_path)
     end
 
     def process_files_in_collection(site, config, input_base_dir, output_base_dir)
+      Jekyll.logger.debug 'Generator:', "Output base directory: #{output_base_dir}"
       collection = site.collections[config[:input_collection]]
       return unless collection
 
+      dot_executable = config[:executable][:dot] # Fetch the `dot` executable from the configuration
+
       collection.docs.each do |doc|
-        process_document(doc, output_base_dir, input_base_dir)
+        process_document(doc, output_base_dir, input_base_dir, dot_executable)
       end
     end
 
-    def process_document(doc, output_base_dir, input_base_dir)
+    # Processes a single `.dot` document.
+    #
+    # @param doc [Jekyll::Document] The document being processed.
+    # @param output_base_dir [String] The base directory for the generated `.svg` file.
+    # @param input_base_dir [String] The base directory for input `.dot` files.
+    # @param dot_executable [String] The path to the `dot` executable.
+    def process_document(doc, output_base_dir, input_base_dir, dot_executable)
       return unless doc.path.end_with?('.dot')
 
       processor = JekyllSketchviz::GraphvizProcessor.new
-      processor.process(doc.path, output_base_dir, input_base_dir)
+      processor.process(doc.path, output_base_dir, input_base_dir, dot_executable)
     end
   end
 end

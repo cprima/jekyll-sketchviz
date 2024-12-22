@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'jekyll'
 require 'jekyll_sketchviz/configuration'
 
 RSpec.describe JekyllSketchviz::Configuration do

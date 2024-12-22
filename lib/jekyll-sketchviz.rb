@@ -11,6 +11,6 @@ module JekyllSketchviz
   # This ensures the plugin is registered and functional when included in a Jekyll site
   Jekyll::Hooks.register :site, :post_write do |site|
     config = Configuration.from_site(site)
-    Jekyll.logger.info 'Jekyll Sketchviz:', "Loaded configuration: #{config.inspect}"
+    Jekyll.logger.debug 'Jekyll Sketchviz:', "Loaded configuration: #{config.inspect}"
   end
 end
