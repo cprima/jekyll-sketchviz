@@ -1,0 +1,14 @@
+markdown: kramdown
+kramdown:
+  input: GFM
+  hard_wrap: false
+highlighter: rouge
+
+# Exclude everything by default
+exclude:
+  - "*"
+  - "**/*"
+
+# Include only these specific files
+include:
+  - index.md
