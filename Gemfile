@@ -6,6 +6,8 @@ gem "nokogiri", "~> 1.12"           # For parsing and modifying SVGs
 gem "csv"
 gem "base64"
 
+
+
 # The jekyll-sketchviz gem dependencies are defined in jekyll-sketchviz.gemspec
 gemspec
 

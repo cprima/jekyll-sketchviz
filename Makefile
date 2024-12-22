@@ -2,16 +2,16 @@
 
 # Test the plugin
 test:
-	@bundle exec rake spec
+	@bundle exec rake project:spec
 
 # Run RuboCop to lint and check for style violations
 lint:
-	@bundle exec rake lint
+	@bundle exec rake project:lint
 
 # Run RuboCop with safe autocorrection
 autocorrect:
 	@echo "Running RuboCop with safe autocorrection..."
-	@bundle exec rake autocorrect
+	@bundle exec rake project:autocorrect
 	@echo "Safe autocorrection completed."
 
 # Build the gem package
@@ -28,7 +28,7 @@ plugin_yank:
 
 # Clean up generated files
 clean:
-	@bundle exec rake clean
+	@bundle exec rake clean:site
 
 # Task to clean and reinstall all gems
 reinstall_dependencies:

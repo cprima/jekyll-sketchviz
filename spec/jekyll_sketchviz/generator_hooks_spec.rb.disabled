@@ -1,0 +1,56 @@
+# frozen_string_literal: true
+
+require 'jekyll'
+require 'jekyll_sketchviz/configuration'
+require 'jekyll_sketchviz/generator'
+require 'jekyll/hooks'
+
+RSpec.describe JekyllSketchviz::Generator, '#hooks' do
+  let(:mock_config) do
+    {
+      'input_collection' => 'graphs',
+      'output' => { 'filesystem' => { 'path' => 'assets/graphs' } },
+      'executable' => { 'dot' => 'dot' }
+    }
+  end
+
+  let(:fresh_mock_site) do
+    instance_double(
+      Jekyll::Site,
+      source: 'spec/mock_files',
+      dest: 'spec/mock_files/_site',
+      config: { 'sketchviz' => mock_config },
+      collections: {}
+    )
+  end
+
+  let(:processed_mock_config) { JekyllSketchviz::Configuration.from_site(fresh_mock_site) }
+  let(:mock_generator) { described_class.new }
+
+  before do
+    # Mock `process_collection_files` and `Hooks` behavior
+    allow(mock_generator).to receive(:process_collection_files)
+    allow(Jekyll::Hooks).to receive(:register).and_call_original
+  end
+
+  describe 'Jekyll Hooks' do
+    it 'registers the :site, :post_write hook' do
+      # Generate with a fresh mock site
+      mock_generator.generate(fresh_mock_site)
+
+      # Assert that the hook was registered
+      expect(Jekyll::Hooks).to have_received(:register).with(:site, :post_write)
+    end
+
+    it 'invokes process_collection_files on :post_write hook trigger' do
+      # Generate with a fresh mock site
+      mock_generator.generate(fresh_mock_site)
+
+      # Simulate triggering the post_write hook
+      Jekyll::Hooks.trigger(:site, :post_write, fresh_mock_site)
+
+      # Assert that `process_collection_files` was called with the correct arguments
+      expect(mock_generator).to have_received(:process_collection_files).with(fresh_mock_site, processed_mock_config)
+    end
+  end
+end
