@@ -17,3 +17,6 @@ tmp/
 demo/
 demo/_site/
 demo/.jekyll-cache/
+
+# Ignore dependencies and environment files
+node_modules/
