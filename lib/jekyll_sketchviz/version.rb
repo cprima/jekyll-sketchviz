@@ -2,5 +2,5 @@
 
 # Defines the version for the JekyllSketchviz plugin.
 module JekyllSketchviz
-  VERSION = '0.0.1' unless defined? VERSION
+  VERSION = '0.0.2' unless defined? VERSION
 end

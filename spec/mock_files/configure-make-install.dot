@@ -1,0 +1,4 @@
+digraph build_process {
+    rankdir=LR;
+    configure -> make -> install;
+}

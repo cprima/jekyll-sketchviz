@@ -1,0 +1,4 @@
+digraph SimpleGraph {
+    node [shape=circle];
+    HelloWorld [label="Hello, World!"];
+}

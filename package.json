@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "jsdom": "^25.0.1",
+    "roughjs": "^4.6.6"
+  }
+}

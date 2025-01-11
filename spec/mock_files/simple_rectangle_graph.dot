@@ -1,0 +1,6 @@
+digraph SimpleGraph {
+    node [shape=rectangle];
+    Node1 [label="Node 1"];
+    Node2 [label="Node 2"];
+    Node1 -> Node2;
+}
